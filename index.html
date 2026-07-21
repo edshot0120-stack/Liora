@@ -1,28 +1,251 @@
 <!doctype html>
-<html lang="ko">
+<html lang="en">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Liora</title>
+<title>Liora — Craft your own sound</title>
+<meta name="description" content="Binaural beats woven with the sounds of nature. 100% synthesized, no ads, yours alone.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=EB+Garamond:wght@500;600&family=Noto+Sans+KR:wght@400;500;700&display=swap" rel="stylesheet">
 <style>
-  :root { --cream:#F6F1E7; --ink:#3A352E; --muted:#8A7A66; --line:#E3DAC8; --green:#3F5D34; }
-  body { margin:0; min-height:100vh; background:var(--cream); color:var(--ink);
-    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Noto Sans KR",sans-serif;
-    display:flex; flex-direction:column; align-items:center; justify-content:center; text-align:center; padding:40px; }
-  h1 { font-family:Georgia,serif; font-weight:600; letter-spacing:6px; font-size:52px; margin:0; }
-  p { color:var(--muted); font-size:16px; margin:10px 0 34px; }
-  .links a { display:inline-block; margin:6px; padding:11px 22px; border:1px solid var(--line);
-    border-radius:24px; color:var(--green); text-decoration:none; font-size:15px; background:#FBF7EF; }
-  .foot { margin-top:40px; color:var(--muted); font-size:13px; }
+  :root {
+    --cream:#F6F1E7; --card:#FBF7EF; --ink:#3A352E; --muted:#8A7A66; --sub:#6B6155;
+    --line:#E5DCC9; --green:#3F5D34; --green-l:#6E9457; --terra:#B5703C; --blue:#3E6B8A;
+  }
+  * { box-sizing:border-box; margin:0; padding:0; }
+  html { scroll-behavior:smooth; }
+  body {
+    background:var(--cream); color:var(--ink);
+    font-family:"Noto Sans KR",-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+    line-height:1.6; overflow-x:hidden;
+  }
+  .serif { font-family:"EB Garamond",Georgia,serif; }
+
+  /* ── 배경 보태니컬 워시 ── */
+  .wash { position:fixed; inset:0; z-index:-1; pointer-events:none;
+    background:
+      radial-gradient(60vw 60vw at 12% 8%, rgba(110,148,87,.16), transparent 70%),
+      radial-gradient(65vw 65vw at 90% 92%, rgba(181,112,60,.12), transparent 70%),
+      var(--cream);
+  }
+  .leaf { position:fixed; z-index:-1; opacity:.10; pointer-events:none; }
+
+  /* ── 언어 토글 ── */
+  .lang-toggle { position:fixed; top:18px; right:20px; z-index:10; display:flex; gap:2px;
+    background:var(--card); border:1px solid var(--line); border-radius:20px; padding:3px; }
+  .lang-toggle button { border:0; background:transparent; padding:5px 14px; border-radius:16px;
+    font-family:inherit; font-size:13px; color:var(--muted); cursor:pointer; }
+  .lang-toggle button.on { background:var(--green); color:var(--cream); }
+
+  /* ── 히어로 ── */
+  .hero { min-height:100svh; display:flex; flex-direction:column; align-items:center;
+    justify-content:center; text-align:center; padding:60px 24px 80px; }
+  .lp { width:min(58vw,300px); aspect-ratio:1; border-radius:50%; position:relative; margin-bottom:44px;
+    background:radial-gradient(circle at 38% 32%, #474139, #3A352E 55%, #2E2A25);
+    box-shadow:0 24px 60px rgba(58,53,46,.28);
+    animation:spin 14s linear infinite; }
+  .lp::before { content:""; position:absolute; inset:6%; border-radius:50%;
+    background:repeating-radial-gradient(circle, transparent 0 5px, rgba(246,241,231,.07) 5px 6px); }
+  .lp::after { content:""; position:absolute; inset:0; border-radius:50%;
+    background:linear-gradient(128deg, rgba(255,255,255,.10) 0%, transparent 42%); }
+  .lp .label { position:absolute; inset:32.5%; border-radius:50%;
+    background:radial-gradient(circle at 42% 38%, #FBF7EF, #F1E9DA);
+    border:3px solid rgba(63,93,52,.75); display:flex; align-items:center; justify-content:center; }
+  .lp .label svg { width:38%; }
+  @keyframes spin { to { transform:rotate(360deg); } }
+  @media (prefers-reduced-motion:reduce){ .lp{ animation:none; } }
+
+  h1 { font-family:"EB Garamond",Georgia,serif; font-weight:600; font-size:clamp(56px,11vw,96px);
+    letter-spacing:.04em; line-height:1.05; }
+  .divider { display:flex; align-items:center; gap:12px; margin:26px 0 22px; color:var(--terra); }
+  .divider::before,.divider::after { content:""; width:44px; height:1px; background:rgba(181,112,60,.4); }
+  .divider span { width:7px; height:7px; background:var(--terra); transform:rotate(45deg); opacity:.75; }
+  .tagline { font-family:"EB Garamond",Georgia,serif; font-weight:600; color:var(--green);
+    font-size:clamp(20px,4vw,28px); letter-spacing:.08em; }
+  .sub { color:var(--sub); font-size:clamp(15px,2.6vw,17px); margin-top:14px; max-width:520px; }
+  .cta-row { margin-top:40px; display:flex; gap:14px; flex-wrap:wrap; justify-content:center; }
+  .cta { display:inline-block; background:var(--green); color:var(--cream); text-decoration:none;
+    padding:16px 42px; border-radius:40px; font-size:17px; font-weight:700; letter-spacing:.02em;
+    box-shadow:0 10px 26px rgba(63,93,52,.25); transition:transform .15s ease, box-shadow .15s ease; }
+  .cta:hover { transform:translateY(-2px); box-shadow:0 14px 32px rgba(63,93,52,.3); }
+  .store-note { margin-top:14px; color:var(--muted); font-size:13px; letter-spacing:.14em; text-transform:uppercase; }
+
+  /* ── 칩 ── */
+  .chips { display:flex; flex-wrap:wrap; gap:10px; justify-content:center; margin-top:34px; max-width:560px; }
+  .chip { padding:8px 18px; border-radius:24px; border:1.5px solid var(--line); background:var(--card);
+    color:var(--sub); font-size:14px; }
+  .chip.on { border-color:var(--green); color:var(--green); background:rgba(63,93,52,.07); font-weight:700; }
+
+  /* ── 섹션 공통 ── */
+  section { max-width:980px; margin:0 auto; padding:90px 24px; }
+  .sec-title { font-family:"EB Garamond",Georgia,serif; font-weight:600; text-align:center;
+    font-size:clamp(30px,5.5vw,42px); margin-bottom:14px; }
+  .sec-sub { text-align:center; color:var(--sub); max-width:560px; margin:0 auto 56px; }
+
+  /* ── 기능 그리드 ── */
+  .grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(260px,1fr)); gap:22px; }
+  .card { background:var(--card); border:1px solid var(--line); border-radius:20px; padding:30px 28px;
+    transition:transform .15s ease; }
+  .card:hover { transform:translateY(-3px); }
+  .card .ic { font-size:26px; margin-bottom:14px; }
+  .card h3 { font-size:17px; font-weight:700; margin-bottom:8px; }
+  .card p { color:var(--sub); font-size:14.5px; }
+
+  /* ── 프리미엄 ── */
+  .plan-wrap { display:flex; gap:20px; flex-wrap:wrap; justify-content:center; }
+  .plan { background:var(--card); border:1.5px solid var(--line); border-radius:22px; padding:34px 38px;
+    text-align:center; min-width:240px; position:relative; }
+  .plan.hot { border-color:var(--green); }
+  .plan .badge { position:absolute; top:-13px; left:50%; transform:translateX(-50%);
+    background:var(--green); color:var(--cream); font-size:11.5px; font-weight:700;
+    padding:4px 14px; border-radius:12px; letter-spacing:.04em; white-space:nowrap; }
+  .plan .price { font-family:"EB Garamond",Georgia,serif; font-size:44px; font-weight:600; margin:8px 0 2px; }
+  .plan .per { color:var(--muted); font-size:14px; }
+  .plan ul { list-style:none; margin-top:18px; text-align:left; }
+  .plan li { font-size:14px; color:var(--sub); padding:5px 0 5px 24px; position:relative; }
+  .plan li::before { content:"✓"; position:absolute; left:0; color:var(--green); font-weight:700; }
+  .trial-note { text-align:center; color:var(--muted); font-size:13px; margin-top:26px; }
+
+  /* ── 푸터 ── */
+  footer { border-top:1px solid var(--line); padding:46px 24px 60px; text-align:center; }
+  footer .links { display:flex; gap:26px; justify-content:center; flex-wrap:wrap; margin-bottom:18px; }
+  footer a { color:var(--green); text-decoration:none; font-size:14px; }
+  footer a:hover { text-decoration:underline; }
+  footer .mail { color:var(--muted); font-size:13.5px; }
+  footer .fine { color:var(--muted); font-size:12px; margin-top:16px; opacity:.8; }
 </style>
 </head>
 <body>
-  <h1>Liora</h1>
-  <p>Binaural beats woven with the sounds of nature.</p>
-  <div class="links">
-    <a href="./privacy.html">Privacy Policy · 개인정보처리방침</a>
-    <a href="./terms.html">Terms of Service · 이용약관</a>
+<div class="wash"></div>
+<svg class="leaf" style="top:6%; left:4%; width:150px; transform:rotate(-24deg)" viewBox="0 0 100 120"><path d="M50 5C20 35 12 70 50 115C88 70 80 35 50 5Z" fill="none" stroke="#3F5D34" stroke-width="2"/><path d="M50 15V105" stroke="#6E9457" stroke-width="1.5"/></svg>
+<svg class="leaf" style="top:12%; right:6%; width:120px; transform:rotate(30deg)" viewBox="0 0 100 120"><path d="M50 5C20 35 12 70 50 115C88 70 80 35 50 5Z" fill="none" stroke="#3F5D34" stroke-width="2"/><path d="M50 15V105" stroke="#6E9457" stroke-width="1.5"/></svg>
+<svg class="leaf" style="bottom:8%; left:8%; width:130px; transform:rotate(14deg)" viewBox="0 0 100 120"><path d="M50 5C20 35 12 70 50 115C88 70 80 35 50 5Z" fill="none" stroke="#3F5D34" stroke-width="2"/><path d="M50 15V105" stroke="#6E9457" stroke-width="1.5"/></svg>
+
+<div class="lang-toggle">
+  <button id="btn-en" class="on" onclick="setLang('en')">EN</button>
+  <button id="btn-ko" onclick="setLang('ko')">한국어</button>
+</div>
+
+<!-- ── 히어로 ── -->
+<div class="hero">
+  <div class="lp" aria-hidden="true">
+    <div class="label">
+      <svg viewBox="0 0 64 72"><path d="M32 68C18 60 8 48 11 34C14 20 26 13 32 18C38 13 50 20 53 34C56 48 46 60 32 68Z" fill="#3F5D34"/><line x1="32" y1="64" x2="32" y2="22" stroke="#6E9457" stroke-width="2.5" stroke-linecap="round"/><circle cx="32" cy="44" r="4" fill="#3A352E"/></svg>
+    </div>
   </div>
-  <div class="foot">relaxliora@gmail.com</div>
+  <h1>Liora</h1>
+  <div class="divider"><span></span></div>
+  <div class="tagline">Sleep · Focus · Calm</div>
+  <p class="sub" data-en="Binaural beats woven with the sounds of nature — a calm space made just for you."
+     data-ko="바이노럴 비트와 자연의 소리를 엮은, 당신을 위한 고요한 공간.">
+     Binaural beats woven with the sounds of nature — a calm space made just for you.</p>
+  <div class="chips">
+    <span class="chip on">Rain</span><span class="chip">Waves</span><span class="chip">Stream</span>
+    <span class="chip">Fire</span><span class="chip on">Melody</span><span class="chip">Birds</span>
+    <span class="chip">Thunder</span><span class="chip">Cosmic</span>
+  </div>
+  <div class="cta-row">
+    <a class="cta" href="#" id="play-link" data-en="Get it on Google Play" data-ko="Google Play에서 받기">Get it on Google Play</a>
+  </div>
+  <div class="store-note" data-en="Free · 7-day premium trial" data-ko="무료 · 프리미엄 7일 체험">Free · 7-day premium trial</div>
+</div>
+
+<!-- ── 기능 ── -->
+<section>
+  <h2 class="sec-title" data-en="Every sound, built from pure math" data-ko="모든 소리를 수학으로 빚었습니다">Every sound, built from pure math</h2>
+  <p class="sec-sub" data-en="No recordings, no loops you've heard elsewhere. Liora synthesizes rain, waves, birds and melody in real time — endlessly, seamlessly."
+     data-ko="녹음도, 어디서 들어본 루프도 없습니다. 비·파도·새·멜로디를 물리 모델링으로 직접 합성해 이음매 없이 끝없이 흐릅니다.">
+     No recordings, no loops you've heard elsewhere. Liora synthesizes rain, waves, birds and melody in real time — endlessly, seamlessly.</p>
+  <div class="grid">
+    <div class="card"><div class="ic">🎚️</div>
+      <h3 data-en="Sound Studio" data-ko="사운드 스튜디오">Sound Studio</h3>
+      <p data-en="Layer up to 8 sounds from 34 — rain over kalimba, thunder under birdsong. Balance, save, make it yours."
+         data-ko="34가지 소리 중 최대 8겹 — 칼림바 위에 비를, 새소리 아래 천둥을. 밸런스를 맞추고 저장하세요.">Layer up to 8 sounds from 34 — rain over kalimba, thunder under birdsong. Balance, save, make it yours.</p></div>
+    <div class="card"><div class="ic">🎧</div>
+      <h3 data-en="Binaural beats" data-ko="바이노럴 비트">Binaural beats</h3>
+      <p data-en="Delta to beta — tune the frequency to your moment: deep sleep, calm focus, or an energizing walk."
+         data-ko="델타부터 베타까지 — 깊은 잠, 차분한 집중, 활기찬 산책. 순간에 맞는 주파수로 조율하세요.">Delta to beta — tune the frequency to your moment: deep sleep, calm focus, or an energizing walk.</p></div>
+    <div class="card"><div class="ic">🌙</div>
+      <h3 data-en="Sleep timer &amp; wake alarm" data-ko="수면 타이머 & 기상 알람">Sleep timer &amp; wake alarm</h3>
+      <p data-en="Sounds fade out as you drift off, and rise gently to wake you — no jarring alarms."
+         data-ko="잠들면 소리가 서서히 잦아들고, 아침엔 부드럽게 차올라 깨워드립니다.">Sounds fade out as you drift off, and rise gently to wake you — no jarring alarms.</p></div>
+    <div class="card"><div class="ic">🎼</div>
+      <h3 data-en="Share cards" data-ko="공유 카드">Share cards</h3>
+      <p data-en="Turn your mix into a beautiful card with a QR code — friends scan it and hear exactly what you made."
+         data-ko="내가 만든 믹스를 QR 카드로 — 친구가 스캔하면 그 소리가 그대로 재생됩니다.">Turn your mix into a beautiful card with a QR code — friends scan it and hear exactly what you made.</p></div>
+    <div class="card"><div class="ic">🔒</div>
+      <h3 data-en="Private by design" data-ko="프라이버시 우선">Private by design</h3>
+      <p data-en="Your mixes stay on your device. No account, no tracking, no personal data sold. Ever."
+         data-ko="믹스는 기기에만 저장됩니다. 계정도, 트래킹도, 개인정보 판매도 없습니다.">Your mixes stay on your device. No account, no tracking, no personal data sold. Ever.</p></div>
+    <div class="card"><div class="ic">🌍</div>
+      <h3 data-en="11 languages" data-ko="11개 언어">11 languages</h3>
+      <p>English, 한국어, 日本語, 中文, Español, Français, Deutsch, Português, Русский, العربية, हिन्दी.</p></div>
+  </div>
+</section>
+
+<!-- ── 프리미엄 ── -->
+<section>
+  <h2 class="sec-title" data-en="Simple pricing" data-ko="심플한 가격">Simple pricing</h2>
+  <p class="sec-sub" data-en="Start free. Go deeper when you're ready — studio-grade 96 kHz audio, all 19 signatures, unlimited saves."
+     data-ko="무료로 시작하세요. 준비되면 더 깊이 — 96kHz 스튜디오 음질, 19개 시그니처 전부, 무제한 저장.">
+     Start free. Go deeper when you're ready — studio-grade 96 kHz audio, all 19 signatures, unlimited saves.</p>
+  <div class="plan-wrap">
+    <div class="plan">
+      <h3 class="serif" style="font-size:22px" data-en="Monthly" data-ko="월간">Monthly</h3>
+      <div class="price">$4.99</div>
+      <div class="per" data-en="per month" data-ko="매월">per month</div>
+      <ul>
+        <li data-en="Everything in Premium" data-ko="프리미엄 전체 기능">Everything in Premium</li>
+        <li data-en="Cancel anytime" data-ko="언제든 해지">Cancel anytime</li>
+      </ul>
+    </div>
+    <div class="plan hot">
+      <div class="badge" data-en="BEST VALUE · SAVE 50%" data-ko="베스트 · 50% 절약">BEST VALUE · SAVE 50%</div>
+      <h3 class="serif" style="font-size:22px" data-en="Yearly" data-ko="연간">Yearly</h3>
+      <div class="price">$29.99</div>
+      <div class="per" data-en="per year — $2.50/mo" data-ko="연 결제 — 월 $2.50꼴">per year — $2.50/mo</div>
+      <ul>
+        <li data-en="Studio-grade 96 kHz audio" data-ko="96kHz 스튜디오 음질">Studio-grade 96 kHz audio</li>
+        <li data-en="All 19 signatures &amp; 34 layers" data-ko="시그니처 19개 · 레이어 34종 전부">All 19 signatures &amp; 34 layers</li>
+        <li data-en="Unlimited custom saves" data-ko="무제한 커스텀 저장">Unlimited custom saves</li>
+        <li data-en="Wake alarm" data-ko="기상 알람">Wake alarm</li>
+      </ul>
+    </div>
+  </div>
+  <p class="trial-note" data-en="7-day free trial · auto-renews until cancelled · cancel anytime in your store settings"
+     data-ko="7일 무료 체험 · 해지 전까지 자동 갱신 · 스토어 설정에서 언제든 해지">
+     7-day free trial · auto-renews until cancelled · cancel anytime in your store settings</p>
+</section>
+
+<footer>
+  <div class="links">
+    <a href="./privacy.html" data-en="Privacy Policy" data-ko="개인정보처리방침">Privacy Policy</a>
+    <a href="./terms.html" data-en="Terms of Service" data-ko="이용약관">Terms of Service</a>
+    <a href="mailto:relaxliora@gmail.com" data-en="Contact" data-ko="문의">Contact</a>
+  </div>
+  <div class="mail">relaxliora@gmail.com</div>
+  <div class="fine" data-en="Liora is not a medical device and is not intended to diagnose, treat, cure, or prevent any disease."
+       data-ko="Liora는 의료기기가 아니며 질병의 진단·치료·예방을 목적으로 하지 않습니다.">
+       Liora is not a medical device and is not intended to diagnose, treat, cure, or prevent any disease.</div>
+</footer>
+
+<script>
+function setLang(l){
+  document.documentElement.lang = l;
+  document.getElementById('btn-en').classList.toggle('on', l==='en');
+  document.getElementById('btn-ko').classList.toggle('on', l==='ko');
+  document.querySelectorAll('[data-en]').forEach(el=>{
+    const v = el.dataset[l];
+    if (v) el.textContent = v;
+  });
+  try { localStorage.setItem('liora-lang', l); } catch(e){}
+}
+try {
+  const saved = localStorage.getItem('liora-lang');
+  const guess = saved || ((navigator.language||'').startsWith('ko') ? 'ko' : 'en');
+  if (guess !== 'en') setLang(guess);
+} catch(e){}
+</script>
 </body>
 </html>
